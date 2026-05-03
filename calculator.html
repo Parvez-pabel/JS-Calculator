@@ -151,13 +151,43 @@
       }
       function calculateValue() {
         try {
-          let expression = display.value.replace(/x/g, "*").replace(/÷/g, "/");
-          display.value = eval(expression);
+          let expression = display.value
+            .replace(/x/g, "*")
+            .replace(/÷/g, "/")
+            .replace(/(\d+)%/g, "($1/100)");
+          display.value = eval(expression).toFixed(4);
         } catch (error) {
           console.error(error);
           display.value = error.message || "Math Error";
         }
       }
+
+      document.addEventListener("keydown", function (e) {
+        const key = e.key;
+
+        if (!isNaN(key)) {
+          appendToDisplay(key);
+        }
+        //operators
+        else if (key === "+") appendToDisplay("+");
+        else if (key === "-") appendToDisplay("-");
+        else if (key === "*") appendToDisplay("x");
+        else if (key === "/") appendToDisplay("÷");
+        else if (key === "%") appendToDisplay("%");
+        else if (key === ".") appendToDisplay(".");
+        //enter = calculate
+        else if (key === "Enter") {
+          calculateValue();
+        }
+        // Backspace=delete last one
+        else if (key === "Backspace") {
+          deleteDisplay();
+        }
+        // Delete = clear all
+        else if (key === "Delete") {
+          clearDisplay();
+        }
+      });
     </script>
   </body>
 </html>
